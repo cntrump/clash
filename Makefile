@@ -35,10 +35,22 @@ docker:
 	$(GOBUILD) -o $(BINDIR)/$(NAME)-$@
 
 darwin-amd64:
-	GOARCH=amd64 GOOS=darwin $(GOBUILD) -o $(BINDIR)/$(NAME)-$@
+	GOARCH=amd64 GOOS=darwin \
+	CGO_CFLAGS="-mmacosx-version-min=10.12 -arch x86_64 -isysroot `xcrun --sdk macosx --show-sdk-path`" \
+	CGO_LDFLAGS="-mmacosx-version-min=10.12 -arch x86_64 -isysroot `xcrun --sdk macosx --show-sdk-path`" \
+	$(GOBUILD) -o $(BINDIR)/$(NAME)-$@
 
 darwin-arm64:
-	GOARCH=arm64 GOOS=darwin $(GOBUILD) -o $(BINDIR)/$(NAME)-$@
+	GOARCH=arm64 GOOS=darwin \
+	CGO_CFLAGS="-mmacosx-version-min=10.12 -arch arm64 -isysroot `xcrun --sdk macosx --show-sdk-path`" \
+	CGO_LDFLAGS="-mmacosx-version-min=10.12 -arch arm64 -isysroot `xcrun --sdk macosx --show-sdk-path`" \
+	$(GOBUILD) -o $(BINDIR)/$(NAME)-$@
+
+ios-arm64:
+	GOARCH=arm64 GOOS=ios \
+	CGO_CFLAGS="-miphoneos-version-min=10.0 -arch arm64 -isysroot `xcrun --sdk iphoneos --show-sdk-path`" \
+	CGO_LDFLAGS="-miphoneos-version-min=10.0 -arch arm64 -isysroot `xcrun --sdk iphoneos --show-sdk-path`" \
+	$(GOBUILD) -o $(BINDIR)/$(NAME)-$@
 
 linux-386:
 	GOARCH=386 GOOS=linux $(GOBUILD) -o $(BINDIR)/$(NAME)-$@
